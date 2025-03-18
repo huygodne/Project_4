@@ -67,10 +67,7 @@
                                                         <label class="name">Quận</label>
                                                         <form:select class="form-control" path="district">
                                                             <form:option value="">---Chọn Quận---</form:option>
-                                                            <form:option value="">Quận 1</form:option>
-                                                            <form:option value="">Quận 2</form:option>
-                                                            <form:option value="">Quận 3</form:option>
-                                                            <form:option value="">Quận 10</form:option>
+                                                            <form:options items="${districts}"/>
                                                         </form:select>
                                                     </div>
 
@@ -172,28 +169,26 @@
                                                 <div class="col-sm-2">
                                                     <div>
                                                         <label class="name">Nhân Viên</label>
-                                                        <select class="form-control">
-                                                            <option value="">---Chọn Nhân Viên---</option>
-                                                            <option value="">Nhân Viên 1</option>
-                                                            <option value="">Nhân Viên 2</option>
-                                                            <option value="">Nhân Viên 3</option>
-                                                            <option value="">Nhân Viên 4</option>
-                                                        </select>
+                                                        <form:select class="form-control" path="staffId">
+                                                            <form:option value="">---Chọn Nhân Viên---</form:option>
+                                                            <form:options items="${listStaffs}"/>
+                                                        </form:select>
                                                     </div>
 
                                                 </div>
                                             </div>
                                             <div class="col-xs-12">
                                                 <div class="col-sm-6">
-                                                    <label class="checkbox-inline">
-                                                        <input type="checkbox">Nội thất
-                                                    </label>
-                                                    <label class="checkbox-inline">
-                                                        <input type="checkbox">Nguyên căn
-                                                    </label>
-                                                    <label class="checkbox-inline">
-                                                        <input type="checkbox">Tầng trệt
-                                                    </label>
+                                                <form:checkboxes items="${typeCodes}" path="typeCode"/>
+<%--                                                    <label class="checkbox-inline">--%>
+<%--                                                        <input type="checkbox">Nội thất--%>
+<%--                                                    </label>--%>
+<%--                                                    <label class="checkbox-inline">--%>
+<%--                                                        <input type="checkbox">Nguyên căn--%>
+<%--                                                    </label>--%>
+<%--                                                    <label class="checkbox-inline">--%>
+<%--                                                        <input type="checkbox">Tầng trệt--%>
+<%--                                                    </label>--%>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12">

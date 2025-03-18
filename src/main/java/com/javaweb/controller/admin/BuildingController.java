@@ -1,9 +1,13 @@
 package com.javaweb.controller.admin;
 
 
+import com.javaweb.enums.districtCode;
+import com.javaweb.enums.buildingType;
 import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
+import com.javaweb.service.impl.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +21,9 @@ import java.util.List;
 
 @Controller(value = "buildingControllerOfAdmin")
 public class BuildingController {
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/admin/building-list", method = RequestMethod.GET)
     public ModelAndView buildingList(@ModelAttribute BuildingSearchRequest buildingSearchRequest, HttpServletRequest request) {
@@ -35,6 +42,9 @@ public class BuildingController {
         responseList.add(it1);
         responseList.add(it2);
         mav.addObject("buildingList", responseList);
+        mav.addObject("listStaffs", userService.getStaffs());
+        mav.addObject("districts", districtCode.type());
+        mav.addObject("typeCodes", buildingType.type());
         return mav;
     }
 

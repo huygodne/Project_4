@@ -232,20 +232,20 @@
                                 <label class="col-xs-3"></label>
                                 <div class="col-xs-9">
                                     <c:if test="${not empty buildingEdit.id}">
-                                        <button type="submit" class="btn btn-primary" id="btnAddBuilding">Cập nhật tòa
+                                        <button type="submit" class="btn btn-primary" id="btnAddOrUpdateBuilding">Cập nhật tòa
                                             nhà
                                         </button>
                                         <button type="submit" class="btn btn-primary">Hủy thao tác</button>
                                     </c:if>
                                     <c:if test="${empty buildingEdit.id}">
-                                        <button type="submit" class="btn btn-primary" id="btnAddBuilding">Thêm tòa
+                                        <button type="submit" class="btn btn-primary" id="btnAddOrUpdateBuilding">Thêm tòa
                                             nhà
                                         </button>
                                         <button type="submit" class="btn btn-primary">Hủy thao tác</button>
                                     </c:if>
                                 </div>
                             </di>
-
+                            <form:hidden path="id" id="buildingId"/>
                         </form>
                     </div>
                 </form:form>
@@ -254,5 +254,35 @@
         </div><!-- /.page-content -->
     </div>
 </div><!-- /.main-content -->
+<script>
+    $('#btnAddOrUpdateBuilding').click(function () {
+        var data = {};
+        var typeCode = [];
+        var formData = $('#form-edit').serializeArray();
+        $.each(formData, function (i, v) {
+            if (v.name != 'typeCode') {
+                data["" + v.name + ""] = v.value;
+            } else {
+                typeCode.push(v.value);
+            }
+        });
+        data['typeCode'] = typeCode;
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/building",
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            dataType: "json",
+            success: function (respond) {
+                console.log("Success");
+            },
+            error: function (respond) {
+                console.log("Fail");
+                console.log(respond);
+            }
+        });
+    });
+</script>
 </body>
 </html>
