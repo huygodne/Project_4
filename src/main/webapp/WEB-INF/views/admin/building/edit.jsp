@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/common/taglib.jsp" %>
+<c:url var="buildingAPI" value="/api/building/"/>
 <html>
 <head>
     <title>Thêm tòa nhà</title>
@@ -52,10 +53,7 @@
                                 <div class="col-xs-2">
                                     <form:select class="form-control" path="district">
                                         <form:option value="">---Chọn Quận---</form:option>
-                                        <form:option value="1">Quận 1</form:option>
-                                        <form:option value="2">Quận 2</form:option>
-                                        <form:option value="3">Quận 3</form:option>
-                                        <form:option value="4">Quận 10</form:option>
+                                        <form:options items="${districts}"/>
                                     </form:select>
                                 </div>
                             </di>
@@ -209,16 +207,7 @@
                             <di class="form-group">
                                 <label class="col-xs-3">Loại tòa nhà</label>
                                 <div class="col-xs-9">
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="typeCode" name="typeCode" value="noi-that">Nội thất
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="typeCode" name="typeCode" value="nguyen-cam">Nguyên
-                                        căn
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" id="typeCode" name="typeCode" value="tang-tret">Tầng trệt
-                                    </label>
+                                    <form:checkboxes items="${typeCodes}" path="typeCode"/>
                                 </div>
                             </di>
 
@@ -232,16 +221,18 @@
                                 <label class="col-xs-3"></label>
                                 <div class="col-xs-9">
                                     <c:if test="${not empty buildingEdit.id}">
-                                        <button type="submit" class="btn btn-primary" id="btnAddOrUpdateBuilding">Cập nhật tòa
+                                        <button type="submit" class="btn btn-primary" id="btnAddOrUpdateBuilding">Cập
+                                            nhật tòa
                                             nhà
                                         </button>
-                                        <button type="submit" class="btn btn-primary">Hủy thao tác</button>
+                                        <button type="button" class="btn btn-primary" id="btnCancel">Hủy thao tác</button>
                                     </c:if>
                                     <c:if test="${empty buildingEdit.id}">
-                                        <button type="submit" class="btn btn-primary" id="btnAddOrUpdateBuilding">Thêm tòa
+                                        <button type="submit" class="btn btn-primary" id="btnAddOrUpdateBuilding">Thêm
+                                            tòa
                                             nhà
                                         </button>
-                                        <button type="submit" class="btn btn-primary">Hủy thao tác</button>
+                                        <button type="button" class="btn btn-primary" id="btnCancel">Hủy thao tác</button>
                                     </c:if>
                                 </div>
                             </di>
@@ -258,7 +249,7 @@
     $('#btnAddOrUpdateBuilding').click(function () {
         var data = {};
         var typeCode = [];
-        var formData = $('#form-edit').serializeArray();
+        var formData = $('#listForm').serializeArray();
         $.each(formData, function (i, v) {
             if (v.name != 'typeCode') {
                 data["" + v.name + ""] = v.value;
@@ -268,9 +259,17 @@
         });
         data['typeCode'] = typeCode;
 
+        if(typeCode != ''){
+            addOrUpdateBuilding(data);
+        }else{
+            window.location.href = "<c:url value="/admin/building-edit?typeCode=require"/>";
+        }
+    });
+
+    function addOrUpdateBuilding(data){
         $.ajax({
             type: "POST",
-            url: "/admin/building",
+            url: "${buildingAPI}",
             data: JSON.stringify(data),
             contentType: "application/json",
             dataType: "json",
@@ -282,6 +281,10 @@
                 console.log(respond);
             }
         });
+    }
+
+    $('#btnCancel').click(function (){
+        window.location.href = "/admin/building-list";
     });
 </script>
 </body>

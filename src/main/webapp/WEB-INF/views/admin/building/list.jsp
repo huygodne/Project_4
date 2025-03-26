@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/common/taglib.jsp" %>
 <c:url var="buildingListURL" value="/admin/building-list"/>
+<c:url var="buildingAPI" value="/api/building/"/>
 <html>
 <head>
     <title>Danh sách tòa nhà</title>
@@ -23,7 +24,6 @@
                     Danh sách tòa nhà
                 </h1>
             </div><!-- /.page-header -->
-
 
             <div class="row">
                 <div class="col-xs-12">
@@ -220,7 +220,7 @@
                                 </button>
                             </a>
 
-                            <button class="btn btn-danger">
+                            <button class="btn btn-danger" id="btnDeleteBuilding">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                      fill="currentColor" class="bi bi-building-dash" viewBox="0 0 16 16">
                                     <path
@@ -240,7 +240,7 @@
 
             <div class="row">
                 <div class="col-xs-12">
-                    <table id="simple-table" style="margin: 3em 0 0;"
+                    <table id="tableList" style="margin: 3em 0 0;"
                            class="table table-striped table-bordered table-hover">
                         <thead>
                         <tr>
@@ -297,7 +297,7 @@
                                             <i class="ace-icon fa fa-pencil bigger-120"></i>
                                         </a>
 
-                                        <button class="btn btn-xs btn-danger">
+                                        <button class="btn btn-xs btn-danger" title="Xóa toà nhà" onclick="deleteBuilding(${item.id})">
                                             <i class="ace-icon fa fa-trash-o bigger-120"></i>
                                         </button>
                                     </div>
@@ -323,7 +323,7 @@
                 <h4 class="modal-title">Danh sách nhân viên</h4>
             </div>
             <div class="modal-body">
-                <table id="simple-table" style="margin: 3em 0 0;"
+                <table id="staffList" style="margin: 3em 0 0;"
                        class="table table-striped table-bordered table-hover">
                     <thead>
                     <tr>
@@ -333,62 +333,123 @@
                     </thead>
 
                     <tbody>
-                    <tr>
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="checkbox" class="ace" value="1" id="checkbox_1">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
-                        <td class="center">
-                            <a>Nguyễn Văn A</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="checkbox" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
 
-                        <td class="center">
-                            <a>Trần Văn B</a>
-                        </td>
-                    </tr>
                     </tbody>
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="btn-assignmentbuilding">Giao tòa nhà</button>
+                <button type="button" class="btn btn-default" id="btnAssignmentBuilding">Giao tòa nhà</button>
                 <button type="button" class="btn btn-default" id="close">Đóng</button>
             </div>
         </div>
-
     </div>
 </div>
 
+<script src="assets/js/jquery.2.1.1.min.js"></script>
 <script>
     function assignmentBuilding(buildingId) {
         $('#assignmentBuildingModal').modal();
-        $('buildingId').val();
+        loadStaff(buildingId);
+        $('#buildingId').val();
     }
 
-    $('assignmentBuilding').click(function (e) {
+    <%--function loadStaff(buildingId){--%>
+    <%--    $.ajax({--%>
+    <%--        type: "GET",--%>
+    <%--        url: "${buildingAPI}" + buildingId + "/staffs",--%>
+    <%--        // data: JSON.stringify(data),--%>
+    <%--        contentType: "application/json",--%>
+    <%--        dataType: "json",--%>
+    //         success: function (response) {
+    //             var row = '';
+    //             $.each(response.data, function (index, item){
+    //                 row += '<tr>';
+    //                 row += '<td class = "text-center"><input type="checkbox" id="checkbox_' + item.staffId + '" value=' + item.staffId + 'class = "checkbox-element"' + item.checked + '/></td>';
+    //                 row += '<td class = "text-center">' + item.fullName + '</td>';
+    //                 row += '</tr>';
+    //             });
+    //             $('#staffList tbody').html(row);
+    //         },
+    <%--        error: function (response) {--%>
+    <%--            console.log("Fail");--%>
+    <%--            window.location.href = <c:url value="/admin/building-list?message=error"/>;--%>
+    <%--            console.log(response);--%>
+    <%--        }--%>
+    <%--    });--%>
+    <%--}--%>
+
+    function loadStaff(buildingId) {
+    $.ajax({
+        type: "GET",
+        url: "${buildingAPI}" + buildingId + "/staffs",
+        // contentType: "application/json",
+        dataType: "json",
+        success: function (response) {
+                var row = '';
+                $.each(response.data, function (index, item){
+                    row += '<tr>';
+                    row += '<td class="text-center"><input type="checkbox" id="checkbox_' + item.staffId +
+        '" value="' + item.staffId + '" class="checkbox-element" ' +
+        (item.checked ? 'checked' : '') + '/></td>';
+                    row += '<td class = "text-center">' + item.fullName + '</td>';
+                    row += '</tr>';
+                });
+                $('#staffList tbody').html(row);
+            },
+        error: function (response) {
+            console.log("Fail");
+            window.location.href = '/admin/building-list?message=error';
+            console.log(response);
+        }
+    });
+}
+
+
+    $('#btnAssignmentBuilding').click(function (e) {
         e.preventDefault();
         var data = {};
         data['buildingId'] = $('#buildingId').val();
-        var staffs = $('#staffList').find('tbody input[type = checkbox]').map(function () {
+        var staffs = $('#staffList').find('tbody input[type = checkbox]:checked').map(function () {
             return $(this).val;
         }).get()
         data['staffs'] = staffs;
         console.log("OK");
     })
 
-    $('btnSearchBuilding').click(function (e) {
+    $('#btnSearchBuilding').click(function (e) {
         e.preventDefault();
         $('#listForm').submit();
     })
+
+    function deleteBuilding(buildingId){
+        var data = [buildingId];
+        deleteBuildings(data);
+    }
+
+    $('#btnDeleteBuilding').click(function (e) {
+        e.preventDefault();
+        var buildingIds = $('#tableList').find('tbody input[type = checkbox]:checked').map(function () {
+            return $(this).val();
+        }).get();
+        deleteBuildings(buildingIds);
+    });
+
+    function deleteBuildings(data){
+        $.ajax({
+            type: "DELETE",
+            url: "${buildingAPI}" + data,
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                console.log("Success");
+            },
+            error: function (response) {
+                console.log("Fail");
+                console.log(response);
+            }
+        });
+    }
 </script>
 </body>
 </html>
