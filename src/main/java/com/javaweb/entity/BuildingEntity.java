@@ -46,7 +46,7 @@ public class BuildingEntity {
     private String managerName;
 
     @Column(name = "managerphone")
-    private String managerPhoneNumber;
+    private String managerPhone;
 
     @Column(name = "servicefee")
     private Integer serviceFee;
@@ -86,7 +86,7 @@ public class BuildingEntity {
     private String decorationTime;
 
     @Column(name = "type")
-    private String type;
+    private String typeCode;
 
     @Column(name = "note")
     private String note;
@@ -115,6 +115,17 @@ public class BuildingEntity {
     @OneToMany(mappedBy = "buildingEntity", fetch = FetchType.LAZY)
     private List<AssignBuildingEntity> assignments;
 
+    @OneToMany(mappedBy = "buildingEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<RentAreaEntity> rentAreas = new ArrayList<>();
+
+    public List<RentAreaEntity> getRentAreas() {
+        return rentAreas;
+    }
+
+    public void setRentAreas(List<RentAreaEntity> rentAreas) {
+        this.rentAreas = rentAreas;
+    }
+
     public List<UserEntity> getUserEntities() {
         List<UserEntity> userEntities = new ArrayList<>();
         if (assignments != null) {
@@ -124,6 +135,7 @@ public class BuildingEntity {
         }
         return userEntities;
     }
+
 
     public List<AssignBuildingEntity> getAssignments() {
         return assignments;
@@ -229,12 +241,12 @@ public class BuildingEntity {
         this.managerName = managerName;
     }
 
-    public String getManagerPhoneNumber() {
-        return managerPhoneNumber;
+    public String getManagerPhone() {
+        return managerPhone;
     }
 
-    public void setManagerPhoneNumber(String managerPhoneNumber) {
-        this.managerPhoneNumber = managerPhoneNumber;
+    public void setManagerPhone(String managerPhone) {
+        this.managerPhone = managerPhone;
     }
 
     public Integer getServiceFee() {
@@ -333,12 +345,12 @@ public class BuildingEntity {
         this.decorationTime = decorationTime;
     }
 
-    public String getType() {
-        return type;
+    public String getTypeCode() {
+        return typeCode;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypeCode(String typeCode) {
+        this.typeCode = typeCode;
     }
 
     public String getNote() {

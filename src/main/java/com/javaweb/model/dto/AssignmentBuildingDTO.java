@@ -6,6 +6,8 @@ public class AssignmentBuildingDTO {
     private Long buildingId;
     private List<Long> staffs;
 
+    public AssignmentBuildingDTO() {}
+
     public Long getBuildingId() {
         return buildingId;
     }

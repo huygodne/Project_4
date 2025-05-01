@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/common/taglib.jsp" %>
 <c:url var="buildingListURL" value="/admin/building-list"/>
-<c:url var="buildingAPI" value="/api/building/"/>
+<c:url var="buildingAPI" value="/api/building"/>
 <html>
 <head>
     <title>Danh sách tòa nhà</title>
@@ -55,7 +55,8 @@
                                                 <div class="col-sm-6">
                                                     <div>
                                                         <label class="name">Diện tích sàn</label>
-                                                        <input type="number" class="form-control">
+<%--                                                        <input type="number" class="form-control">--%>
+                                                        <form:input class="form-control" path="floorArea"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -121,32 +122,30 @@
                                                 <div class="col-sm-3">
                                                     <div>
                                                         <label class="name">Diện tích từ</label>
-                                                        <input type="number" class="form-control">
+                                                        <form:input class="form-control" path="areaFrom"/>
                                                     </div>
 
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div>
                                                         <label class="name">Diện tích đến</label>
-                                                        <input type="text" class="form-control">
+                                                        <form:input class="form-control" path="areaTo"/>
                                                     </div>
 
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div>
                                                         <label class="name">Giá thuê từ</label>
-                                                        <input type="text" class="form-control">
+                                                        <form:input class="form-control" path="rentPriceFrom"/>
                                                     </div>
 
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div>
                                                         <label class="name">Giá thuê đến</label>
-                                                        <input type="number" class="form-control">
+                                                        <form:input class="form-control" path="rentPriceTo"/>
                                                     </div>
-
                                                 </div>
-
 
                                             </div>
                                             <div class="col-xs-12">
@@ -179,16 +178,16 @@
                                             </div>
                                             <div class="col-xs-12">
                                                 <div class="col-sm-6">
-                                                <form:checkboxes items="${typeCodes}" path="typeCode"/>
-<%--                                                    <label class="checkbox-inline">--%>
-<%--                                                        <input type="checkbox">Nội thất--%>
-<%--                                                    </label>--%>
-<%--                                                    <label class="checkbox-inline">--%>
-<%--                                                        <input type="checkbox">Nguyên căn--%>
-<%--                                                    </label>--%>
-<%--                                                    <label class="checkbox-inline">--%>
-<%--                                                        <input type="checkbox">Tầng trệt--%>
-<%--                                                    </label>--%>
+                                                    <form:checkboxes items="${typeCodes}" path="typeCode"/>
+                                                        <%--                                                    <label class="checkbox-inline">--%>
+                                                        <%--                                                        <input type="checkbox">Nội thất--%>
+                                                        <%--                                                    </label>--%>
+                                                        <%--                                                    <label class="checkbox-inline">--%>
+                                                        <%--                                                        <input type="checkbox">Nguyên căn--%>
+                                                        <%--                                                    </label>--%>
+                                                        <%--                                                    <label class="checkbox-inline">--%>
+                                                        <%--                                                        <input type="checkbox">Tầng trệt--%>
+                                                        <%--                                                    </label>--%>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12">
@@ -269,7 +268,8 @@
                             <tr>
                                 <td class="center">
                                     <label class="pos-rel">
-                                        <input type="checkbox" class="ace" name="checkList" value="${item.id}">
+                                        <input id="buildingId" type="checkbox" class="ace" name="checkList"
+                                               value="${item.id}">
                                         <span class="lbl"></span>
                                     </label>
                                 </td>
@@ -297,7 +297,8 @@
                                             <i class="ace-icon fa fa-pencil bigger-120"></i>
                                         </a>
 
-                                        <button class="btn btn-xs btn-danger" title="Xóa toà nhà" onclick="deleteBuilding(${item.id})">
+                                        <button class="btn btn-xs btn-danger" title="Xóa toà nhà"
+                                                onclick="deleteBuilding(${item.id})">
                                             <i class="ace-icon fa fa-trash-o bigger-120"></i>
                                         </button>
                                     </div>
@@ -350,59 +351,34 @@
     function assignmentBuilding(buildingId) {
         $('#assignmentBuildingModal').modal();
         loadStaff(buildingId);
-        $('#buildingId').val();
+        $('#buildingId').val(buildingId);
     }
 
-    <%--function loadStaff(buildingId){--%>
-    <%--    $.ajax({--%>
-    <%--        type: "GET",--%>
-    <%--        url: "${buildingAPI}" + buildingId + "/staffs",--%>
-    <%--        // data: JSON.stringify(data),--%>
-    <%--        contentType: "application/json",--%>
-    <%--        dataType: "json",--%>
-    //         success: function (response) {
-    //             var row = '';
-    //             $.each(response.data, function (index, item){
-    //                 row += '<tr>';
-    //                 row += '<td class = "text-center"><input type="checkbox" id="checkbox_' + item.staffId + '" value=' + item.staffId + 'class = "checkbox-element"' + item.checked + '/></td>';
-    //                 row += '<td class = "text-center">' + item.fullName + '</td>';
-    //                 row += '</tr>';
-    //             });
-    //             $('#staffList tbody').html(row);
-    //         },
-    <%--        error: function (response) {--%>
-    <%--            console.log("Fail");--%>
-    <%--            window.location.href = <c:url value="/admin/building-list?message=error"/>;--%>
-    <%--            console.log(response);--%>
-    <%--        }--%>
-    <%--    });--%>
-    <%--}--%>
-
     function loadStaff(buildingId) {
-    $.ajax({
-        type: "GET",
-        url: "${buildingAPI}" + buildingId + "/staffs",
-        // contentType: "application/json",
-        dataType: "json",
-        success: function (response) {
+        $.ajax({
+            type: "GET",
+            url: "${buildingAPI}/" + buildingId + "/staffs",
+            // contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
                 var row = '';
-                $.each(response.data, function (index, item){
+                $.each(response.data, function (index, item) {
                     row += '<tr>';
                     row += '<td class="text-center"><input type="checkbox" id="checkbox_' + item.staffId +
-        '" value="' + item.staffId + '" class="checkbox-element" ' +
-        (item.checked ? 'checked' : '') + '/></td>';
+                        '" value="' + item.staffId + '" class="checkbox-element" ' +
+                        (item.checked ? 'checked' : '') + '/></td>';
                     row += '<td class = "text-center">' + item.fullName + '</td>';
                     row += '</tr>';
                 });
                 $('#staffList tbody').html(row);
             },
-        error: function (response) {
-            console.log("Fail");
-            window.location.href = '/admin/building-list?message=error';
-            console.log(response);
-        }
-    });
-}
+            error: function (response) {
+                console.log("Fail");
+                window.location.href = '/admin/building-list?message=error';
+                console.log(response);
+            }
+        });
+    }
 
 
     $('#btnAssignmentBuilding').click(function (e) {
@@ -410,18 +386,39 @@
         var data = {};
         data['buildingId'] = $('#buildingId').val();
         var staffs = $('#staffList').find('tbody input[type = checkbox]:checked').map(function () {
-            return $(this).val;
+            return $(this).val();
         }).get()
         data['staffs'] = staffs;
+        if (data['staffs'] != '') {
+            assign(data);
+        }
         console.log("OK");
     })
+
+    function assign(data) {
+        $.ajax({
+            type: "POST",
+            url: "${buildingAPI}" + "/assignment",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (response) {
+                console.log("Success");
+            },
+            error: function (response) {
+                console.info("Giao không thành công");
+                window.location.href = '/admin/building-list?message=error';
+                console.log(response);
+            }
+        });
+    }
 
     $('#btnSearchBuilding').click(function (e) {
         e.preventDefault();
         $('#listForm').submit();
     })
 
-    function deleteBuilding(buildingId){
+    function deleteBuilding(buildingId) {
         var data = [buildingId];
         deleteBuildings(data);
     }
@@ -434,15 +431,16 @@
         deleteBuildings(buildingIds);
     });
 
-    function deleteBuildings(data){
+    function deleteBuildings(data) {
         $.ajax({
             type: "DELETE",
-            url: "${buildingAPI}" + data,
-            data: JSON.stringify(data),
+            url: "${buildingAPI}/" + data,
+            // data: JSON.stringify(data),
             contentType: "application/json",
-            dataType: "json",
+            dataType: "text",
             success: function (response) {
-                console.log("Success");
+                alert(response);
+                window.location.reload();
             },
             error: function (response) {
                 console.log("Fail");
